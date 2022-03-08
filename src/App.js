@@ -18,19 +18,20 @@ const App = () => {
     read: []
   });
 
+  const getBooks = async () => {
+    const res = await getAll();
+    const current = res.filter((x) => x.shelf === 'currentlyReading');
+    const want = res.filter((x) => x.shelf === 'wantToRead');
+    const read = res.filter((x) => x.shelf === 'read');
+    setBooks({
+      currentlyReading: current || [],
+      wantToRead: want || [],
+      read: read || []
+    });
+  };
+
   useEffect(() => {
-    const func = async () => {
-      const res = await getAll();
-      const current = res.filter((x) => x.shelf === 'currentlyReading');
-      const want = res.filter((x) => x.shelf === 'wantToRead');
-      const read = res.filter((x) => x.shelf === 'read');
-      setBooks({
-        currentlyReading: current || [],
-        wantToRead: want || [],
-        read: read || []
-      });
-    };
-    func();
+    getBooks();
   }, []);
 
   return (
@@ -57,7 +58,7 @@ const App = () => {
           <div className="list-books-content">
             <div>
               {Object.keys(shelves).map((shelf) => (
-                <Shelf key={shelf} shelfTitle={shelves[shelf]} books={books[shelf]} />
+                <Shelf key={shelf} shelfTitle={shelves[shelf]} books={books[shelf]} onUpdate={getBooks} />
               ))}
             </div>
           </div>

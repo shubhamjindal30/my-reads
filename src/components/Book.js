@@ -1,5 +1,12 @@
+import { update } from "../BooksAPI";
+
 const Book = (props) => {
-  const { authors, imageLinks, title } = props.book;
+  const { authors, imageLinks, shelf, title } = props.book;
+
+  const handleChange = async (e) => {
+    await update(props.book, e.target.value);
+    props.onUpdate();
+  }
 
   return (
     <li>
@@ -14,7 +21,7 @@ const Book = (props) => {
             }}
           ></div>
           <div className="book-shelf-changer">
-            <select>
+            <select value={shelf || 'none'} onChange={handleChange}>
               <option value="none" disabled>
                 Move to...
               </option>
