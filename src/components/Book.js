@@ -1,12 +1,18 @@
-import { update } from "../BooksAPI";
+import { update } from '../BooksAPI';
 
 const Book = (props) => {
-  const { authors, imageLinks, shelf, title } = props.book;
+  const { authors, imageLinks, shelf, title, id } = props.book;
 
   const handleChange = async (e) => {
-    await update(props.book, e.target.value);
-    props.onUpdate();
-  }
+    const newShelf = e.target.value;
+    const res = await update(props.book, newShelf);
+    if (res) {
+      const updatedBooks = [...props.allBooks];
+      const index = updatedBooks.findIndex(book => book.id === id);
+      updatedBooks[index].shelf = newShelf;
+      props.setBooks(updatedBooks);
+    }
+  };
 
   return (
     <li>
@@ -22,7 +28,7 @@ const Book = (props) => {
           ></div>
           <div className="book-shelf-changer">
             <select value={shelf || 'none'} onChange={handleChange}>
-              <option value="none" disabled>
+              <option disabled>
                 Move to...
               </option>
               <option value="currentlyReading">Currently Reading</option>
@@ -33,7 +39,7 @@ const Book = (props) => {
           </div>
         </div>
         <div className="book-title">{title}</div>
-        <div className="book-authors">{authors.join(', ')}</div>
+        <div className="book-authors">{authors?.join(', ')}</div>
       </div>
     </li>
   );
