@@ -52,7 +52,7 @@ const SearchPage = () => {
       </div>
       <div className="search-books-results">
         <ol className="books-grid">
-          {books
+          {query && books
             .filter((book) => !!book.imageLinks)
             .map((bookObj) => {
               const book = { ...bookObj };
